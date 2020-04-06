@@ -10,10 +10,15 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@master
+    
+    - name: Set Instrumentation Key for Application Insights
+      run: echo "INSTRUMENTATION_KEY=\"$INSTRUMENTATION_KEY\"" > .env
+      env:
+        INSTRUMENTATION_KEY: ${{ secrets.INSTRUMENTATION_KEY }}
 
     - name: Set up Node.js version
       uses: actions/setup-node@v1
