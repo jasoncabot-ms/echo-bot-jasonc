@@ -2,6 +2,7 @@ const { join, resolve } = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { HotModuleReplacementPlugin, NamedModulesPlugin } = require('webpack');
+const DotenvPlugin = require('dotenv-webpack');
 
 module.exports = {
     entry: './src/app.ts',
@@ -33,7 +34,8 @@ module.exports = {
         new HotModuleReplacementPlugin(),
         new CopyWebpackPlugin([
             { from: resolve(__dirname, 'index.html'), to: '' }
-        ])
+        ]),
+        new DotenvPlugin({ safe: true }),
     ],
     resolve: {
         extensions: ['.css', '.js', '.ts']

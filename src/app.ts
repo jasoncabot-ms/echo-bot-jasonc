@@ -11,6 +11,13 @@ import {
 import './css/app.css';
 import { WebChatAdapter } from './webChatAdapter';
 import { renderWebChat } from 'botframework-webchat';
+import { ApplicationInsights } from '@microsoft/applicationinsights-web'
+
+// Start monitoring for Application Insights
+const instrumentationKey = process.env.INSTRUMENTATION_KEY;
+const appInsights = new ApplicationInsights({ config: { instrumentationKey } });
+appInsights.loadAppInsights();
+appInsights.trackPageView();
 
 // Create the custom WebChatAdapter.
 const webChatAdapter = new WebChatAdapter();
@@ -37,14 +44,15 @@ webChatAdapter.processActivity(async turnContext => {
         // Read from state.
         let count = await countProperty.get(turnContext);
         count = count === undefined ? 1 : count;
+        appInsights.trackMetric({name: 'message-sent', average: count});
         await turnContext.sendActivity(
-            `${ count }: You said "${ turnContext.activity.text }"`
+            `${count}: You said "${turnContext.activity.text}"`
         );
         // Increment and set turn counter.
         await countProperty.set(turnContext, ++count);
     } else {
         await turnContext.sendActivity(
-            `[${ turnContext.activity.type } event detected]`
+            `[${turnContext.activity.type} event detected]`
         );
     }
     await conversationState.saveChanges(turnContext);
