@@ -32,4 +32,4 @@ jobs:
         app-name: 'echo-bot-jasonc'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_2e9a745717194bafa41517736c433657 }}
-        package: .
+        package: ./dist
